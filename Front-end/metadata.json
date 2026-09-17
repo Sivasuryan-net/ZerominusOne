@@ -1,0 +1,6 @@
+{
+  "name": "ZeroMinusOne",
+  "description": "A comprehensive security suite featuring real-time zero-day EDR, behavioral ML detection, automatic scanning, and a SOC control center.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

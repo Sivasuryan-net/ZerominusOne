@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "alert",
+    "payload": {
+      "entity": "SIMULATED-ENDPOINT-01",
+      "entityId": "SIM-001",
+      "platform": "Windows",
+      "type": "KNOWN_MALWARE",
+      "summary": "Known malware signature detected in a downloaded executable",
+      "riskScore": 94,
+      "ruleScore": 100,
+      "mlScore": 82,
+      "autoencoderLoss": 0.8,
+      "status": "ACTIVE",
+      "rules": ["SIG-001: Safe simulation signature match"]
+    }
+  },
+  {
+    "kind": "alert",
+    "payload": {
+      "entity": "SIMULATED-ENDPOINT-02",
+      "entityId": "SIM-002",
+      "platform": "Windows",
+      "type": "ZERO_DAY_ANOMALY",
+      "summary": "Previously unseen high-entropy behavior detected",
+      "riskScore": 88,
+      "ruleScore": 35,
+      "mlScore": 98,
+      "autoencoderLoss": 0.91,
+      "status": "ACTIVE",
+      "rules": ["SIG-401: High entropy content suggests packing"]
+    }
+  },
+  {
+    "kind": "mail",
+    "payload": {
+      "sender": "simulation@example.invalid",
+      "recipient": "security@example.com",
+      "subject": "Safe simulated attachment event",
+      "attachmentName": "invoice_update_installer.exe",
+      "sandboxStatus": "DETONATED",
+      "riskScore": 91,
+      "verdict": "MALICIOUS_ATTACHMENT"
+    }
+  }
+]

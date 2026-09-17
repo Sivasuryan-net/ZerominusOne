@@ -1,0 +1,12 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:///./zero_minus_one.db
+    volumes:
+      - backend-data:/app
+
+volumes:
+  backend-data:
