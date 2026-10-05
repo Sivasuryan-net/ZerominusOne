@@ -3,7 +3,7 @@ import hashlib
 import json
 import random
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -152,7 +152,23 @@ def list_mail() -> list[dict[str, Any]]:
 
 @app.get("/api/agents", response_model=list[AgentDevice])
 def list_agents() -> list[dict[str, Any]]:
-    return read_all("agents")
+    cutoff = datetime.now(timezone.utc) - timedelta(seconds=90)
+    agents = []
+    for agent in read_all("agents"):
+        try:
+            last_seen = datetime.fromisoformat(agent["lastSeen"].replace("Z", "+00:00"))
+            if last_seen < cutoff and agent["status"] != "ISOLATED":
+                agent = {**agent, "status": "OFFLINE"}
+        except (KeyError, ValueError):
+            agent = {**agent, "status": "OFFLINE"}
+        agents.append(agent)
+    return agents
+
+
+@app.post("/api/agents/heartbeat", response_model=AgentDevice)
+def agent_heartbeat(agent: AgentDevice) -> AgentDevice:
+    upsert("agents", agent.id, agent.model_dump(), agent.lastSeen)
+    return agent
 
 
 @app.get("/api/cases", response_model=list[InvestigationCase])

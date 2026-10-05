@@ -1,8 +1,11 @@
 import io
+import hashlib
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.ingestion.download_watcher import sha256_file
 
 
 client = TestClient(app)
@@ -42,3 +45,28 @@ def test_thresholds_round_trip() -> None:
     )
     assert response.status_code == 200
     assert client.get("/api/settings/thresholds").json()["ruleWeightRatio"] == 0.6
+
+
+def test_agent_heartbeat() -> None:
+    payload = {
+        "id": "AGENT-TEST",
+        "hostname": "TEST-PC",
+        "ipAddress": "127.0.0.1",
+        "platform": "Windows",
+        "agentVersion": "test",
+        "status": "ONLINE",
+        "lastSeen": "2026-09-17T00:00:00Z",
+        "activeUser": "tester",
+        "threatCount": 0,
+        "resourceUsage": {"cpu": 0, "ram": 0},
+        "telemetryFeed": "Sysmon",
+    }
+    response = client.post("/api/agents/heartbeat", json=payload)
+    assert response.status_code == 200
+    assert any(agent["id"] == "AGENT-TEST" for agent in client.get("/api/agents").json())
+
+
+def test_watcher_hashes_file(tmp_path: Path) -> None:
+    sample = tmp_path / "sample.bin"
+    sample.write_bytes(b"watcher sample")
+    assert sha256_file(sample) == hashlib.sha256(b"watcher sample").hexdigest()
