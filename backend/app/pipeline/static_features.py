@@ -4,6 +4,8 @@ import re
 from collections import Counter
 from pathlib import Path
 
+from .model_params import FEATURE_COLUMNS
+
 
 def shannon_entropy(data: bytes) -> float:
     if not data:
@@ -44,4 +46,10 @@ def extract_features(filename: str, data: bytes) -> dict[str, float | str | bool
         "has_office_macro": is_office_macro,
         "has_base64_command": has_base64_command,
         "injection_imports": ",".join(name.decode() for name in injection_imports),
+        "injection_import_count": float(len(injection_imports)),
     }
+
+
+def feature_vector(features: dict[str, float | str | bool]) -> list[float]:
+    """Return the stable numeric vector shared by training and inference."""
+    return [float(features.get(column, 0)) for column in FEATURE_COLUMNS]

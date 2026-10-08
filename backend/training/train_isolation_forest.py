@@ -3,9 +3,7 @@ import sys
 from pathlib import Path
 
 from app.pipeline.ml_isolation_forest import AnomalyModel
-
-
-FEATURE_COLUMNS = ["file_size", "entropy", "has_double_extension", "is_pe"]
+from app.pipeline.model_params import FEATURE_COLUMNS
 
 
 def load_rows(csv_path: Path) -> list[list[float]]:
@@ -14,7 +12,7 @@ def load_rows(csv_path: Path) -> list[list[float]]:
 
 
 if __name__ == "__main__":
-    source = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("training/data/ember_features.csv")
+    source = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("training/data/features.csv")
     if not source.exists():
         raise SystemExit(f"Feature CSV not found: {source}")
     model = AnomalyModel()

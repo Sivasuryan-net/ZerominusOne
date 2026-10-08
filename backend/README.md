@@ -28,6 +28,20 @@ The API is available at `http://localhost:8000`, with interactive documentation 
 
 The frontend currently keeps its SOC state in `SecurityContext.tsx`; this API is additive and does not alter that UI state. The existing Express server remains responsible for the frontend and `/api/ai-explain`.
 
+The repository includes a small synthetic dataset at
+`training/data/features.csv` for smoke-testing the model pipeline. Run
+`python -m training.train_isolation_forest` from `backend`, or pass another
+CSV path as the first argument when replacing it with a real dataset.
+
+## Model tuning
+
+The shared numeric feature order is defined in `app/pipeline/model_params.py` and
+used by both `training/train_isolation_forest.py` and runtime inference. Initial
+values are marked `HARDCODED`; tune them only after comparing models on a dataset
+with matching columns. The current CSV columns are `file_size`, `entropy`,
+`has_double_extension`, `is_pe`, `extension_mismatch`, `has_office_macro`,
+`has_base64_command`, and `injection_import_count`.
+
 ## Download watcher agent
 
 The watcher must run in the same Python virtual environment as the backend. Open PowerShell from the repository root.

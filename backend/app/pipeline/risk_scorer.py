@@ -1,9 +1,12 @@
+from .model_params import RISK_ML_WEIGHT, RISK_RULE_WEIGHT
+
+
 def calculate_risk(
     rule_score: float,
     ml_score: float,
     autoencoder_loss: float,
-    rule_weight: float = 0.5,
-    ml_weight: float = 0.5,
+    rule_weight: float = RISK_RULE_WEIGHT,
+    ml_weight: float = RISK_ML_WEIGHT,
 ) -> float:
     combined_weights = rule_weight + ml_weight
     if combined_weights <= 0:
